@@ -110,7 +110,7 @@ const commands = [
 
   new SlashCommandBuilder()
     .setName('say')
-    .setDescription('[Whitelist] Make the bot send a message')
+    .setDescription('Make the bot send a message')
     .addStringOption(o => o.setName('message').setDescription('Message to send').setRequired(true))
     .addChannelOption(o => o.setName('channel').setDescription('Channel to send in (defaults to current)').setRequired(false)),
 
@@ -353,7 +353,6 @@ client.on('interactionCreate', async (interaction) => {
       }
 
       case 'say': {
-        if (!wl) return interaction.reply({ content: `❌ You need whitelist access to use /say.`, ephemeral: true });
         const message = interaction.options.getString('message');
         const channel = interaction.options.getChannel('channel') || interaction.channel;
         await channel.send(message);
