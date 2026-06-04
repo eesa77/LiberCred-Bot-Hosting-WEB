@@ -109,6 +109,12 @@ const commands = [
     .addIntegerOption(o => o.setName('amount').setDescription('Amount').setRequired(true).setMinValue(1)),
 
   new SlashCommandBuilder()
+    .setName('say')
+    .setDescription('[Whitelist] Make the bot send a message')
+    .addStringOption(o => o.setName('message').setDescription('Message to send').setRequired(true))
+    .addChannelOption(o => o.setName('channel').setDescription('Channel to send in (defaults to current)').setRequired(false)),
+
+  new SlashCommandBuilder()
     .setName('whitelist')
     .setDescription('[Whitelist] Manage the LiberCred whitelist')
     .addSubcommand(s => s.setName('add-user').setDescription('Add a user to the whitelist')
@@ -344,6 +350,14 @@ client.on('interactionCreate', async (interaction) => {
             )
             .setTimestamp()
         ]});
+      }
+
+      case 'say': {
+        if (!wl) return interaction.reply({ content: `❌ You need whitelist access to use /say.`, ephemeral: true });
+        const message = interaction.options.getString('message');
+        const channel = interaction.options.getChannel('channel') || interaction.channel;
+        await channel.send(message);
+        return interaction.reply({ content: '✅ Sent!', ephemeral: true });
       }
 
       case 'whitelist': {
